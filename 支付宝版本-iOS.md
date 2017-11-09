@@ -162,6 +162,45 @@ TYRZLogin -> loginImplicitly
     token = 84840100013202003A516B55354D6B4A434D4467304D5456434F4441334D30553040687474703A2F2F3132302E3139372E3233352E32373A383038302F72732F403031030004031A1A9B040012383030313230313730383137313031343230FF00200970BFEA09AEF18EEDCF32A4F960412E9AA5DE9A21DF7DC669E4D27E3519A1A4
 }
 ```
+## 2.2. 获取SDK内部异常的信息
+
+### 2.2.1. 方法说明
+
+**功能**
+
+监听SDK内部异常的信息
+
+**原型**
+
+TYRZLogin -> kTYRZNotificationKeyLog
+
+```objective-c
+
+@property (nonatomic,class,readonly) NSString *kTYRZNotificationKeyLog;
+
+```
+### 2.2.2. 使用说明
+
+[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(observeSDKException:) name:TYRZLogin.kTYRZNotificationKeyLog object:nil];
+
+- (void)observeSDKException:(NSNotification *)sender {
+    
+    //异常的信息以NSDictionary传回到sender.object
+    NSDictionary __unused *exceptionDict = sender.object;
+}
+
+### 2.2.3. 返回字典结构
+
+```
+@{@"message":message}
+
+```
+**参数说明**
+
+| 参数        | 类型         | 
+| ---------- | ------------- | 
+| message    | NSString或者NSError | 
+
 
 <div STYLE="page-break-after: always;"></div>
 
