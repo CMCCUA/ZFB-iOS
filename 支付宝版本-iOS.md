@@ -181,6 +181,7 @@ TYRZLogin -> kTYRZNotificationKeyLog
 ```
 ### 2.2.2. 使用说明
 
+```
 [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(observeSDKException:) name:TYRZLogin.kTYRZNotificationKeyLog object:nil];
 
 - (void)observeSDKException:(NSNotification *)sender {
@@ -190,7 +191,8 @@ TYRZLogin -> kTYRZNotificationKeyLog
     NSDictionary __unused *exceptionDict = sender.object;
     
  }
-
+ 
+ ```
 ### 2.2.3. 返回字典结构
 
 ```
