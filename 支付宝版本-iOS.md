@@ -186,8 +186,10 @@ TYRZLogin -> kTYRZNotificationKeyLog
 - (void)observeSDKException:(NSNotification *)sender {
     
     //异常的信息以NSDictionary传回到sender.object
+    
     NSDictionary __unused *exceptionDict = sender.object;
-}
+    
+ }
 
 ### 2.2.3. 返回字典结构
 
