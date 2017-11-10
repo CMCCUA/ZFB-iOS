@@ -192,7 +192,7 @@ TYRZLogin -> kTYRZNotificationKeyLog
     
  }
  
- ```
+```
 ### 2.2.3. 返回字典结构
 
 ```
@@ -201,9 +201,9 @@ TYRZLogin -> kTYRZNotificationKeyLog
 ```
 **参数说明**
 
-| 参数        | 类型         | 
-| ---------- | ------------- | 
-| message    | NSString或者NSError | 
+| 参数      | 类型                |
+| ------- | ----------------- |
+| message | NSString或者NSError |
 
 
 <div STYLE="page-break-after: always;"></div>
@@ -214,7 +214,7 @@ TYRZLogin -> kTYRZNotificationKeyLog
 
 ### 3.1.1. 接口说明
 
-业务平台或服务端携带用户授权成功后的token来调用统一认证服务端获取用户信息。
+客户端SDK携带用户授权成功后的token来调用SDK服务端的相应访问用户资源的接口。
 
 ### 3.1.2. 接口描述
 
@@ -228,21 +228,21 @@ TYRZLogin -> kTYRZNotificationKeyLog
 
 **请求参数**
 
-| 参数名称          | 约束      | 层级    | 参数类型   | 说明                                       |
-| ------------- | ------- | ----- | ------ | ---------------------------------------- |
-| **header**    | **必选**  | **1** |        |                                          |
-| version       | 必选      | 2     | string | 填1.0                                     |
-| msgid         | 必选      | 2     | string | 标识请求的随机数即可(1-36位)                        |
-| systemtime    | 必选      | 2     | string | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
-| strictcheck   | 必选      | 2     | string | 验证源ip合法性，填写”1”，统一认证会校验sourceid与出口ip对应关系（申请sourceid时需提供业务出口ip，可以多个IP） |
-| sourceid      | 可选      | 2     | string | 业务集成统一认证的标识，需提前申请                        |
-| ssotosourceid | 可选      | 2     | string | 单点登录时使用，填写被登录业务的sourceid                 |
-| appid         | 必选      | 2     | string | 业务在统一认证申请的应用id                           |
-| apptype       | 必选      | 2     | string | 1:BOSS<br />2:web<br />3:wap<br />4:pc客户端<br />5:手机客户端 |
-| expandparams  | 扩展参数    | 2     | Map    | map(key,value)                           |
-| **body**      | **必选**  | **1** |        |                                          |
-| sign          | 当有密钥时必填 | 2     | String | 签名HMAC（appid+token）,key使用支付宝提供的公钥        |
-| token         | 必选      | 2     | string | 需要解析的凭证值。                                |
+| 参数名称          | 约束      | 层级   | 参数类型   | 说明                                       |
+| ------------- | ------- | ---- | ------ | ---------------------------------------- |
+| header        | 必选      | 1    |        |                                          |
+| version       | 必选      | 2    | string | 填1.0                                     |
+| msgid         | 必选      | 2    | string | 标识请求的随机数即可(1-36位)                        |
+| systemtime    | 必选      | 2    | string | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
+| strictcheck   | 必选      | 2    | string | 验证源ip合法性，填写”1”，统一认证会校验sourceid与出口ip对应关系（申请sourceid时需提供业务出口ip，可以多个IP） |
+| sourceid      | 可选      | 2    | string | 业务集成统一认证的标识，需提前申请，申请指南见附录一               |
+| ssotosourceid | 可选      | 2    | string | 单点登录时使用，填写被登录业务的sourceid                 |
+| appid         | 必选      | 2    | string | 业务在统一认证申请的应用id                           |
+| apptype       | 必选      | 2    | string | 1:BOSS<br />2:web<br />3:wap<br />4:pc客户端<br />5:手机客户端 |
+| expandparams  | 扩展参数    | 2    | Map    | map(key,value)                           |
+| body          | 必选      | 1    |        |                                          |
+| sign          | 当有密钥时必填 | 2    | String | 业务端RSA私钥签名（appid+token）, 服务端使用支付宝提供的公钥进行RSA公钥解密 |
+| token         | 必选      | 2    | string | 需要解析的凭证值。                                |
 
 **请求示例**
 
@@ -251,44 +251,45 @@ TYRZLogin -> kTYRZNotificationKeyLog
     "header": {
         "strictcheck": "0",
         "version": "1.0",
-        "msgid": 	"40a940a940a940a93b8d3b8d3b8d3b8d",
-        "systemtime": "20170515090923489",
-        "appid": "10000001",
-        "apptype": "5"
+        "msgid": "4d1953f426a14b2ba9edd07b269cea70",
+        "systemtime": "20171109145619809",
+        "appid": "300005687666",
+        "apptype": "5",
+        "sourceid": "800120170818101447",
+        "sign": "751E95E65384F2563E9285E94248AF63E972B2326F648CB947D8308543BCF4902D82A9CA7174880A388D6649BD66B2848A4B814143FA61584506CD7E9FB6B7A8AB5AF40F944CC930703ADC3356DE13B93FB429CFC393D8B73FDC02711B0B60848A735D1F90810FBEB8475FEEFBE6D8E774ABE9CB77E857A1CF49AFBA097B0413"
     },
     "body": {
- 		"token":
-"8484010001320200344E6A5A4551554D784F444E474E446C434E446779517A673340687474703A2F2F3139322E3136382E31322E3233363A393039302F0300040353EA68040006313030303030FF00203A020A143C6703D7D0530953C760744C7D61F5F7B546F12BC17D65254878748C"
+        "token": "STsid0000001510210576710ivYn20UXdDa8Nhw0LpL1szQi5KJhgf5r"
     }
 }
 ```
 
 **响应参数**
 
-| 参数名称                | 约束     | 层级    | 参数类型   | 说明                                       |
-| ------------------- | ------ | ----- | ------ | ---------------------------------------- |
-| **header**          | **必选** | **1** |        |                                          |
-| version             | 必选     | 2     | string | 1.0                                      |
-| inresponseto        | 必选     | 2     | string | 对应的请求消息中的msgid                           |
-| systemtime          | 必选     | 2     | string | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
-| resultCode          | 必选     | 2     | string | 返回码，返回码对应说明见附录二                          |
-| **body**            | **必选** | **1** |        |                                          |
-| userid              | 必选     | 2     | string | 系统中用户的唯一标识                               |
-| pcid                | 必选     | 2     | string | 伪码id（显示和隐试登录都有）                          |
-| usessionid          | 可选     | 2     | string | 暂忽略                                      |
-| passid              | 可选     | 2     | string | 用户统一账号的系统标识                              |
-| andid               | 可选     | 2     | string | 用户的“和ID”                                 |
-| msisdn              | 可选     | 2     | string | 表示手机号码(1.返回手机号已新增校验逻辑新校验地址：[返回手机号适配逻辑](http://120.197.235.101:8090/pages/viewpage.action?pageId=3115524)  2.当appid有支付宝提供的密钥时，手机号加密返回，（使用AES加密，key为支付宝提供的公钥截取前16位） ) |
-| email               | 可选     | 2     | string | 表示邮箱地址                                   |
-| loginidtype         | 可选     | 2     | string | 登录使用的用户标识：</br>0：手机号码</br>1：邮箱           |
-| msisdntype          | 可选     | 2     | string | 手机号码的归属运营商：</br>0：中国移动</br>1：中国电信</br>2：中国联通</br>99：未知的异网手机号码 |
-| province            | 可选     | 2     | string | 用户所属省份(暂无)                               |
-| authtype            | 可选     | 2     | string | 认证方式，取值参见附录三                             |
-| authtime            | 可选     | 2     | string | 统一认证平台认证用户的时间                            |
-| lastactivetime      | 可选     | 2     | string | 暂无                                       |
-| relateToAndPassport | 可选     | 2     | string | 是否已经关联到统一账号，暂无用处                         |
-| fromsourceid        | 可选     | 2     | string | 来源sourceid（即签发token sourceid）            |
-| tosourceid          | 可选     | 2     | string | 目的sourceid（即被登录业务sourceid）               |
+| 参数名称                | 约束   | 层级   | 参数类型   | 说明                                       |
+| ------------------- | ---- | ---- | ------ | ---------------------------------------- |
+| header              | 必选   | 1    |        |                                          |
+| version             | 必选   | 2    | string | 1.0                                      |
+| inresponseto        | 必选   | 2    | string | 对应的请求消息中的msgid                           |
+| systemtime          | 必选   | 2    | string | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
+| resultCode          | 必选   | 2    | string | 返回码，返回码对应说明见附录二                          |
+| body                | 必选   | 1    |        |                                          |
+| userid              | 必选   | 2    | string | 系统中用户的唯一标识                               |
+| pcid                | 必选   | 2    | string | 伪码id（显示和隐试登录都有）                          |
+| usessionid          | 可选   | 2    | string | 暂忽略                                      |
+| passid              | 可选   | 2    | string | 用户统一账号的系统标识                              |
+| andid               | 可选   | 2    | string | 用户的“和ID”                                 |
+| msisdn              | 可选   | 2    | string | 表示手机号码(当appid有支付宝提供的密钥时，手机号用RSA公钥加密返回。使用私钥可以) |
+| email               | 可选   | 2    | string | 表示邮箱地址                                   |
+| loginidtype         | 可选   | 2    | string | 登录使用的用户标识：</br>0：手机号码</br>1：邮箱           |
+| msisdntype          | 可选   | 2    | string | 手机号码的归属运营商：</br>0：中国移动</br>1：中国电信</br>2：中国联通</br>99：未知的异网手机号码 |
+| province            | 可选   | 2    | string | 用户所属省份(暂无)                               |
+| authtype            | 可选   | 2    | string | 认证方式，取值参见附录三                             |
+| authtime            | 可选   | 2    | string | 统一认证平台认证用户的时间                            |
+| lastactivetime      | 可选   | 2    | string | 暂无                                       |
+| relateToAndPassport | 可选   | 2    | string | 是否已经关联到统一账号，暂无用处                         |
+| fromsourceid        | 可选   | 2    | string | 来源sourceid（即签发token sourceid）            |
+| tosourceid          | 可选   | 2    | string | 目的sourceid（即被登录业务sourceid）               |
 
 **响应示例**
 
@@ -296,19 +297,17 @@ TYRZLogin -> kTYRZNotificationKeyLog
 {
     "body": {
         "msisdntype": "0",
-        "usessionid": "NjZEQUMxODNGNDlCNDgyQzg3@http://192.168.12.236:9090/",
-        "passid": "000000000",
-        "loginidtype": "0",
-        "authtime": "2017-05-22 20:48:45",
-        "msisdn": "13683329795",
-        "lastactivetime": "",
+        "lastactivetime": "2017-11-09 14:56:16",
         "authtype": "WAPGW",
-        "relateToAndPassport": "1"
+        "fromsourceid": "800120170714100001",
+        "loginidtype": "0",
+        "authtime": "2017-11-09 14:56:16",
+        "msisdn": "48DB711B1BA151E20DBD2F726404E44F352561A30A58C74368A8A8C64851AA9E652AA55E8924FA6BACA660DFBE0F3E9EEA5FF7369CED03817445397DA0E0D590E0A6871655464C0F336192F00147718FD4C05511E3C0F400F65DCC18FD80D368F3F429C67FD4D6B6F38673AF8D3388891099847203897CD4025D5E54BFC3B570"
     },
     "header": {
-        "inresponseto": "40a940a940a940a93b8d3b8d3b8d3b8d",
+        "inresponseto": "4d1953f426a14b2ba9edd07b269cea70",
         "resultcode": "103000",
-        "systemtime": "20170522204845598",
+        "systemtime": "20171109145620587",
         "version": "1.0"
     }
 }
