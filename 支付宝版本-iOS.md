@@ -89,11 +89,12 @@
 TYRZLogin -> loginImplicitly
 
 ```objective-c
-+ loginImplicitlyWithAppId:(NSString *)appid
++ (void)loginImplicitlyWithAppId:(NSString *)appid
                           appkey:(NSString *)appkey
-                          capaId:(NSString *)capaId
-                      capaIdTime:(NSString *)capaIdTime
-                        complete:(void (^)(id sender))complete;
+                          capaId:(NSString *)capaid
+                      capaIdTime:(NSString *)capaidTime
+                           scene:(NSString *)scene
+                        complete:(void (^)(id sender))complete
 ```
 
 ### 2.1.2. 参数说明
