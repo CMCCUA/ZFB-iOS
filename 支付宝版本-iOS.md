@@ -106,8 +106,10 @@ TYRZLogin -> loginImplicitly
 | appid      | NSString      | 开放平台申请得到的appid  | 是    |
 | appkey     | NSString      | 开放平台申请得到的appkey | 是    |
 | capaId     | NSString.     | 授权列表            | 是    |
-| capaidTime | NSString.     | 当前时间            | 是    |
+| capaidTime | NSString.     | 当前时间            | 否    |
 | complete   | UAFinishBlock | 登录回调            | 是    |
+| scene      | NSString      | 场景参数            | 否    |
+
 
 **响应参数**
 
@@ -128,27 +130,25 @@ TYRZLogin -> loginImplicitly
 /**
  隐式登录
  */
--- (IBAction)loginimplicit:(id)sender {
-    
-    NSTimeInterval Now = [[NSDate date]timeIntervalSince1970]*1000;
-    long long theTime = [[NSNumber numberWithDouble:Now] longLongValue];
-    NSString *capaidTime = [NSString stringWithFormat:@"%llu",theTime];
+- (IBAction)loginimplicit:(id)sender {
     
     [TYRZLogin loginImplicitlyWithAppId:APPID
                                  appkey:APPKEY
                                  capaId:@"200"
-                             capaIdTime:capaidTime
+                               capaIdTime:@""
+                                   scene:@"scene"
                                complete:^(id sender) {
-        NSString *resultCode = sender[@"resultCode"];
-        self.token = sender[@"token"];
-        NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:sender];
-        if ([resultCode isEqualToString:CLIENTSUCCESSCODECLIENT]) {
-            result[@"result"] = @"获取token成功";
-        } else {
-            result[@"result"] = @"获取token失败";
-        }
-        [self showInfo:result];
-    }];
+                                   NSString *resultCode = sender[@"resultCode"];
+                                   self.token = sender[@"token"];
+                                   NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:sender];
+                                   if ([resultCode isEqualToString:CLIENTSUCCESSCODECLIENT]) {
+                                       result[@"result"] = @"获取token成功";
+                                   } else {
+                                       result[@"result"] = @"获取token失败";
+                                   }
+                                   [self showInfo:result];
+                               }];
+}
 ```
 
 **响应示例代码**
