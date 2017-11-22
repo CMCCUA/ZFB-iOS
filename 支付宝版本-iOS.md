@@ -108,7 +108,7 @@ TYRZLogin -> loginImplicitly
 | capaId     | NSString.     | 授权列表            | 是    |
 | capaidTime | NSString.     | 当前时间            | 否    |
 | complete   | UAFinishBlock | 登录回调            | 是    |
-| scene      | NSString      | 场景参数            | 否    |
+| scene      | NSString      | 扩展参数，默认为空    | 否    |
 
 
 **响应参数**
