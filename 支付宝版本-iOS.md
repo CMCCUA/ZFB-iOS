@@ -35,18 +35,6 @@
 
 **第一步：**
 
-在appDelegate.m中的didFinish函数中添加初始化代码。初始化代码只需要执行一次就可以。
-
-```objective-c
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
-     [TYRZBaseApi customInit:APPID appKey:APPKEY];
-    return YES;
-}
-```
-
-**第二步：**
-
 在需要用到登录的地方调用登录接口即可，以下是登录示例
 
 ```objective-c
