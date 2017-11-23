@@ -161,25 +161,23 @@ TYRZLogin -> loginImplicitly
 
 **原型**
 
-TYRZLogin -> kTYRZNotificationKeyLog
+TYRZLogin -> TYRZLoginDelegate
 
 ```objective-c
 
-@property (nonatomic,class,readonly) NSString *kTYRZNotificationKeyLog;
+-(void)TYRZDeBugWithMessage:(NSDictionary *)message
 
 ```
 ### 2.2.2. 使用说明
 
 ```
-[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(observeSDKException:) name:TYRZLogin.kTYRZNotificationKeyLog object:nil];
+TYRZLogin.debugDelegate = self;
+- (void)TYRZDeBugWithMessage:(NSDictionary *)message {
+    
+    NSLog(@"debug message: %@", message);
+    
+}
 
-- (void)observeSDKException:(NSNotification *)sender {
-    
-    //异常的信息以NSDictionary传回到sender.object
-    
-    NSDictionary __unused *exceptionDict = sender.object;
-    
- }
  
 ```
 ### 2.2.3. 返回字典结构
