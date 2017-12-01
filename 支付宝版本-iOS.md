@@ -193,6 +193,30 @@ TYRZLogin.debugDelegate = self;
 | message | NSString或者NSError |
 
 
+### 2.3.1. 取消隐式登录操作
+
+### 2.3.2. 方法说明
+
+**功能**
+
+取消隐式登录操作
+
+**原型**
+
+TYRZLogin -> cancel
+
+```objective-c
+
++ (void)cancel
+
+```
+### 2.3.3. 使用说明
+
+```
+[TYRZLogin cancel];
+
+```
+
 <div STYLE="page-break-after: always;"></div>
 
 # 3. 平台接口说明
