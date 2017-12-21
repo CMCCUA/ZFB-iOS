@@ -20,18 +20,7 @@
 
 本节内容主要面向新接入统一认证的开发者，介绍快速集成统一认证的基本服务的方法。
 
-### 1.2.1. 统一认证登录流程
-
-![](image//19.png)
-
-由流程图可知，业务客户端集成SDK后只需要完成2步集成实现登录
-
-```
-1.	调用登录接口获取token
-2.	携带token请求登录
-```
-
-### 1.2.2. 统一认证登录集成步骤
+### 1.2.1. 统一认证登录集成步骤
 
 **第一步：**
 
@@ -70,7 +59,7 @@
 
 **功能**
 
-隐式登录方法，用户打开APP，直接完成登录，不需要用户确认，仅提供伪码给业务侧，无法获取用户手机号码。
+开发者通过隐式登录方法，无授权弹窗，可获取到token和openID，应用服务端凭token向SDK服务端请求校验是否本机号码。
 
 **原型**
 
@@ -94,21 +83,21 @@ TYRZLogin -> loginImplicitly
 | appid      | NSString      | 开放平台申请得到的appid  | 是    |
 | appkey     | NSString      | 开放平台申请得到的appkey | 是    |
 | capaId     | NSString.     | 授权列表            | 是    |
-| capaidTime | NSString.     | 当前时间            | 否    |
+| capaidTime | NSString.     | 当前时间            | 否    |
 | complete   | UAFinishBlock | 登录回调            | 是    |
-| scene      | NSString      | 扩展参数，默认为空    | 否    |
+| scene      | NSString      | 扩展参数，默认为空       | 否    |
 
 
 **响应参数**
 
-| 参数          | 类型         | 说明             | 是否必填  |
-| ----------- | ---------- | -------------- | ----- |
-| resultCode  | NSUinteger | 返回相应的结果码       | 是     |
-| token       | NSString   | 登录时需要的token    | 成功时必填 |
-| openid      | NSString   | 成功时返回：用户身份唯一标识 | 成功时必填 |
-| authType    | NSString   | 认证类型(详见附录1)    | 成功时必填 |
-| authTypeDes | NSString   | 认证类型描述(详见附录1)  | 成功时必填 |
-| desc        | NSString   | 调用描述           | 否     |
+| 参数          | 类型         | 说明                                       | 是否必填  |
+| ----------- | ---------- | ---------------------------------------- | ----- |
+| resultCode  | NSUinteger | 返回相应的结果码                                 | 是     |
+| token       | NSString   | 登录时需要的token                              | 成功时必填 |
+| openid      | NSString   | 成功时返回：用户身份唯一标识                           | 成功时必填 |
+| authType    | NSString   | 认证类型：0:其他；</br>1:WiFi下网关鉴权；</br>2:网关鉴权；</br>3:短信上行鉴权；</br>7:短信验证码登录 | 成功时必填 |
+| authTypeDes | NSString   | 认证类型描述，详见authType描述                      | 成功时必填 |
+| desc        | NSString   | 调用描述                                     | 否     |
 
 ### 2.1.3. 示例
 
@@ -177,14 +166,11 @@ TYRZLogin.debugDelegate = self;
     NSLog(@"debug message: %@", message);
     
 }
-
- 
 ```
 ### 2.2.3. 返回字典结构
 
 ```
 @{@"message":message}
-
 ```
 **参数说明**
 
@@ -245,13 +231,13 @@ TYRZLogin -> cancel
 | version       | 必选      | 2    | string | 填1.0                                     |
 | msgid         | 必选      | 2    | string | 标识请求的随机数即可(1-36位)                        |
 | systemtime    | 必选      | 2    | string | 请求消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
-| strictcheck   | 必选      | 2    | string | 验证源ip合法性，填写”1”，统一认证会校验sourceid与出口ip对应关系（申请sourceid时需提供业务出口ip，可以多个IP） |
-| sourceid      | 可选      | 2    | string | 业务集成统一认证的标识，需提前申请，申请指南见附录一               |
+| strictcheck   | 必选      | 2    | string | 暂时填写"0"                                  |
+| sourceid      | 可选      | 2    | string | 业务集成统一认证的标识                              |
 | ssotosourceid | 可选      | 2    | string | 单点登录时使用，填写被登录业务的sourceid                 |
-| appid         | 必选      | 2    | string | 业务在统一认证申请的应用id                           |
-| apptype       | 必选      | 2    | string | 1:BOSS<br />2:web<br />3:wap<br />4:pc客户端<br />5:手机客户端 |
+| appid         | 必选      | 2    | string | 业务在统一认证申请的应用                             |
+| apptype       | 必选      | 2    | string | 1:BOSS</br>2:web</br>3:wap</br>4:pc客户端</br>5:手机客户端 |
 | expandparams  | 扩展参数    | 2    | Map    | map(key,value)                           |
-| sign          | 当有密钥时必填 | 2    | String | 业务端RSA私钥签名（appid+token）, 服务端使用支付宝提供的公钥进行RSA公钥解密 |
+| sign          | 当有密钥时必填 | 2    | String | 业务端RSA私钥签名（appid+token）, 服务端使用开发者提供的公钥进行RSA公钥解密开发者 |
 | body          | 必选      | 1    |        |                                          |
 | token         | 必选      | 2    | string | 需要解析的凭证值。                                |
 
@@ -283,19 +269,19 @@ TYRZLogin -> cancel
 | version             | 必选   | 2    | string | 1.0                                      |
 | inresponseto        | 必选   | 2    | string | 对应的请求消息中的msgid                           |
 | systemtime          | 必选   | 2    | string | 响应消息发送的系统时间，精确到毫秒，共17位，格式：20121227180001165 |
-| resultCode          | 必选   | 2    | string | 返回码，返回码对应说明见附录二                          |
+| resultCode          | 必选   | 2    | string | 返回码，返回码请参考SDK返回码说明                       |
 | body                | 必选   | 1    |        |                                          |
 | userid              | 必选   | 2    | string | 系统中用户的唯一标识                               |
 | pcid                | 必选   | 2    | string | 伪码id（显示和隐试登录都有）                          |
 | usessionid          | 可选   | 2    | string | 暂忽略                                      |
 | passid              | 可选   | 2    | string | 用户统一账号的系统标识                              |
 | andid               | 可选   | 2    | string | 用户的“和ID”                                 |
-| msisdn              | 可选   | 2    | string | 表示手机号码(当appid有支付宝提供的密钥时，手机号用RSA公钥加密返回。使用私钥可以) |
+| msisdn              | 可选   | 2    | string | 表示手机号码(当appid有开发者提供的密钥时，手机号用RSA公钥加密返回。使用私钥可以) |
 | email               | 可选   | 2    | string | 表示邮箱地址                                   |
 | loginidtype         | 可选   | 2    | string | 登录使用的用户标识：</br>0：手机号码</br>1：邮箱           |
 | msisdntype          | 可选   | 2    | string | 手机号码的归属运营商：</br>0：中国移动</br>1：中国电信</br>2：中国联通</br>99：未知的异网手机号码 |
 | province            | 可选   | 2    | string | 用户所属省份(暂无)                               |
-| authtype            | 可选   | 2    | string | 认证方式，取值参见附录三                             |
+| authtype            | 可选   | 2    | string | 认证类型：</br>0:其他；</br>1:WiFi下网关鉴权；</br>2:网关鉴权；</br>3:短信上行鉴权；</br>7:短信验证码登录 |
 | authtime            | 可选   | 2    | string | 统一认证平台认证用户的时间                            |
 | lastactivetime      | 可选   | 2    | string | 暂无                                       |
 | relateToAndPassport | 可选   | 2    | string | 是否已经关联到统一账号，暂无用处                         |
@@ -396,37 +382,21 @@ TYRZLogin -> cancel
 
 ## 4.2. SDK返回码说明
 
-| 错误编号   | 返回码描述                |
-| ------ | -------------------- |
-| 103000 | 成功                   |
-| 102101 | 无网络                  |
-| 102102 | 网络异常                 |
-| 102223 | 数据解析异常               |
-| 102121 | 用户取消认证               |
-| 102505 | 业务未注册                |
-| 102506 | 请求出错                 |
-| 102507 | 请求超时                 |
-| 102201 | 自动登陆失败               |
-| 102202 | 应用签名失败               |
-| 102203 | 输入参数错误               |
-| 102204 | 正在gettoken处理         |
-| 102210 | 指定号码非本机号码            |
-| 102211 | 短信验证码验证成功后返回随机码为空    |
-| 102222 | http响应头中没有结果码        |
-| 102299 | other failed         |
-| 102302 | 调用service超时          |
-| 103117 | mac异常 macError       |
-| 103200 | ks无需更新               |
-| 103203 | 缓存用户不存在              |
-| 200001 | imsi为空，跳到短信验证码登录     |
-| 200002 | imsi为空，没有短信验证码登录功能   |
-| 200003 | 复用中间件首次登录            |
-| 200004 | 复用中间件二次登录            |
-| 200005 | 用户未授权                |
-| 200006 | 用户未授权                |
-| 200007 | 不支持的认证方式 跳到短信验证码登录   |
-| 200008 | 不支持的认证方式 没有短信验证码登录功能 |
-| 200009 | 应用合法性校验失败            |
+| 错误编号   | 返回码描述                                  |
+| ------ | -------------------------------------- |
+| 103000 | 成功                                     |
+| 102101 | 无网络                                    |
+| 102102 | 网络异常                                   |
+| 102103 | 未打开数据网络                                |
+| 102109 | 网络错误，1. 欠费卡；2. 网络环境不佳                  |
+| 102203 | 输入参数缺失（缺少appid、appkey、capaId其中任何一个时返回） |
+| 102208 | 参数错误                                   |
+| 102210 | 不支持短信发送                                |
+| 102301 | 用户取消登录                                 |
+| 102302 | 没有执行参数初始化                              |
+| 102507 | 请求超时                                   |
+| 200002 | 没有sim卡                                 |
+| 200009 | Bundle ID与服务器填写的不一致                    |
 
 <div STYLE="page-break-after: always;"></div>
 
