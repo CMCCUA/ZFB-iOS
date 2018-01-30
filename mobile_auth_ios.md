@@ -98,6 +98,7 @@ TYRZLogin -> loginImplicitly
 | authType    | NSString   | 认证类型：0:其他；</br>1:WiFi下网关鉴权；</br>2:网关鉴权；</br>3:短信上行鉴权；</br>7:短信验证码登录 | 成功时必填 |
 | authTypeDes | NSString   | 认证类型描述，详见authType描述                      | 成功时必填 |
 | desc        | NSString   | 调用描述                                     | 否     |
+| traceId     | NSString   | 每调用一次接口都生成一个traceId，用于定位某次调用接口产生的bug | 是 | 失败和成功都返回 |
 
 ### 2.1.3. 示例
 
