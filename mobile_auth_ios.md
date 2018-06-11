@@ -28,24 +28,23 @@
 
 ```objective-c
 - (void)showImplicitLogin {
-    self.waitBGV.hidden = NO;
-    [self.waitAV startAnimating];
-     __weak typeof(self) weakSelf = self;
-    [TYRZLogin loginImplicitly:^(id sender) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.waitBGV.hidden = YES;
-            [weakSelf.waitAV stopAnimating];
-            NSString *resultCode = sender[@"resultCode"];
-            self.token = sender[@"token"];
-            NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:sender];
-            if ([resultCode isEqualToString:SUCCESSCODE]) {
-                result[@"result"] = @"获取token成功";
-            } else {
-                result[@"result"] = @"获取token失败";
-            }
-            [self showInfo:result];
-        });
-    }];
+
+    //self.loginManager为TYRZLogin实例化之后的对象
+    [self.loginManager loginImplicitlyWithAppId:APPID
+                                 appkey:APPKEY
+                                 capaId:@"200"
+                             capaIdTime:NULL
+                                  scene:@"scene"
+                               complete:^(id sender) {
+                                   
+                                   NSString *resultCode = sender[@"resultCode"];                       
+                                   NSMutableDictionary *result = [sender mutableCopy];
+                                   BOOL isSuccess = [resultCode isEqualToString:CLIENTSUCCESSCODECLIENT];
+                                   NSString *resultMessage = isSuccess ? @"获取token成功" : @"获取token失败";
+                                   result[@"result"] = resultMessage;                                   
+                                   NSLog(@"result:/n%@", result);
+                                   
+                               }];
 }
 ```
 
@@ -66,7 +65,7 @@
 TYRZLogin -> loginImplicitly
 
 ```objective-c
-+ (void)loginImplicitlyWithAppId:(NSString *)appid
+- (void)loginImplicitlyWithAppId:(NSString *)appid
                           appkey:(NSString *)appkey
                           capaId:(NSString *)capaid
                       capaIdTime:(NSString *)capaidTime
@@ -99,18 +98,19 @@ TYRZLogin -> loginImplicitly
 | authTypeDes | NSString   | 认证类型描述，详见authType描述                      | 成功时必填 |
 | desc        | NSString   | 调用描述                                     | 否     |
 | traceId     | NSString   | 每调用一次接口都生成一个traceId，用于定位某次调用接口产生的bug | 是 | 失败和成功都返回 |
+| securityphone | NSString   | 与token一同返回的掩码手机号 | 是 | 成功时返回 |
 
 ### 2.1.3. 示例
 
 **请求示例代码**
 
-``` java
+``` objective-c
 /**
  隐式登录
  */
 - (IBAction)loginimplicit:(id)sender {
-    
-    [TYRZLogin loginImplicitlyWithAppId:APPID
+    //self.loginManager为TYRZLogin实例化之后的对象
+    [self.loginManager loginImplicitlyWithAppId:APPID
                                  appkey:APPKEY
                                  capaId:@"200"
                                capaIdTime:@""
@@ -136,8 +136,10 @@ TYRZLogin -> loginImplicitly
     authType = 2;
     resultCode = 103000;
     openId = "lcIvEt9u1RRBwr8richVcbEUzzrm6IaFXNPWPejB2b3O_vVIkAwI";
-    authToeDes = @"网关鉴权"
-    result = @"获取token成功"
+    authToeDes = "网关鉴权"
+    result = "获取token成功"
+    securityphone = "136****1234"
+    traceId = 7ed2adde99d84a4aadafb8bea5d80678
     token = 84840100013202003A516B55354D6B4A434D4467304D5456434F4441334D30553040687474703A2F2F3132302E3139372E3233352E32373A383038302F72732F403031030004031A1A9B040012383030313230313730383137313031343230FF00200970BFEA09AEF18EEDCF32A4F960412E9AA5DE9A21DF7DC669E4D27E3519A1A4
 }
 ```
@@ -161,7 +163,7 @@ TYRZLogin -> TYRZLoginDelegate
 ### 2.2.2. 使用说明
 
 ```
-TYRZLogin.debugDelegate = self;
+self.loginManager.debugDelegate = self; //在登录当前场景设置debug代理回调
 - (void)TYRZDeBugWithMessage:(NSDictionary *)message {
     
     NSLog(@"debug message: %@", message);
@@ -194,13 +196,13 @@ TYRZLogin -> cancel
 
 ```objective-c
 
-+ (void)cancel
+- (void)cancel
 
 ```
 ### 2.3.3. 使用说明
 
 ```
-[TYRZLogin cancel];
+[login cancel];
 
 ```
 
@@ -386,15 +388,13 @@ TYRZLogin -> cancel
 | 错误编号   | 返回码描述                                  |
 | ------ | -------------------------------------- |
 | 103000 | 成功                                     |
-| 102101 | 无网络                                    |
-| 102102 | 网络异常                                   |
-| 102103 | 未打开数据网络                                |
-| 102109 | 网络错误，1. 欠费卡；2. 网络环境不佳                  |
-| 102203 | 输入参数缺失（缺少appid、appkey、capaId其中任何一个时返回） |
-| 102208 | 参数错误                                   |
-| 102210 | 不支持短信发送                                |
-| 102301 | 用户取消登录                                 |
-| 102302 | 没有执行参数初始化                              |
-| 102507 | 请求超时                                   |
-| 200002 | 没有sim卡                                 |
 | 200009 | Bundle ID与服务器填写的不一致                    |
+| 200021 | 解析JSON数据失败 |
+| 200022 | 无网络                                    |
+| 200023 | Socket请求超时（超出CFRunLoop的运转时间，10秒） |
+| 200027 | 蜂窝网络未开启或蜂窝网络不稳定（蜂窝数据在开关两个状态之间切换可能处于不稳定） |
+| 200028 | Socket接收不到数据 |
+| 200030 | 输入参数缺失（缺少appid、appkey、capaId其中任何一个时返回） |
+| 200047 | Socket连接服务器失败 |
+| 200048 | 没有SIM卡 |
+| 200053 | Socket调用CFSocketConnect()函数返回Error，此时并未进入CFRunLoop |
